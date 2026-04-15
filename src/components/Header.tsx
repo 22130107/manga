@@ -151,6 +151,21 @@ export function Header() {
     }
   }
 
+  function handleSecretPortalOpen() {
+    const password = window.prompt('Tính năng này cần mật khẩu để truy cập,nhập pass hoặc liên hệ admin:')
+
+    if (password === null) {
+      return
+    }
+
+    if (password.trim() === 'huynh2ten') {
+      window.location.assign('https://2ten.vercel.app/')
+      return
+    }
+
+    window.alert('Mật khẩu không đúng.')
+  }
+
   function handleSearchInputChange(value: string) {
     setSearchValue(value)
 
@@ -349,99 +364,122 @@ export function Header() {
     : null
 
   return e(
-    'div',
-    { className: 'fixed h-[100.8px] left-0 top-0 right-0 z-50' },
+    React.Fragment,
+    null,
     e(
       'div',
-      {
-        className:
-          'items-center self-stretch flex justify-between overflow-visible relative backdrop-blur-sm bg-[rgba(9,16,26,0.9)] shadow-[rgba(0,0,0,0.1)_0px_10px_15px_-3px,_rgba(0,0,0,0.1)_0px_4px_6px_-4px] pt-[9px] pr-0 pb-[7.2px] pl-0',
-      },
+      { className: 'fixed h-[100.8px] left-0 top-0 right-0 z-50' },
       e(
         'div',
-        { className: 'relative w-full' },
+        {
+          className:
+            'items-center self-stretch flex justify-between overflow-visible relative backdrop-blur-sm bg-[rgba(9,16,26,0.9)] shadow-[rgba(0,0,0,0.1)_0px_10px_15px_-3px,_rgba(0,0,0,0.1)_0px_4px_6px_-4px] pt-[9px] pr-0 pb-[7.2px] pl-0',
+        },
         e(
           'div',
-          {
-            className:
-              'mx-auto flex w-full max-w-[1182.72px] flex-col gap-3 px-4 py-2 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-4',
-          },
+          { className: 'relative w-full' },
           e(
             'div',
-            { className: 'items-center flex shrink-0' },
-            e(
-              Link,
-              { to: '/', className: 'block' },
-              e(
-                'div',
-                { className: 'flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2' },
-                e('span', { className: 'text-lg font-black tracking-[0.3em] text-[rgb(223,168,255)]' }, 'HYUNManga'),
-              ),
-            ),
-          ),
-          e(
-            'div',
-            { className: 'flex w-full flex-col gap-2 lg:absolute lg:left-1/2 lg:max-w-[520px] lg:-translate-x-1/2 lg:flex-row lg:items-center lg:gap-[10.8px]' },
+            {
+              className:
+                'mx-auto flex w-full max-w-[1182.72px] flex-col gap-3 px-4 py-2 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-4',
+            },
             e(
               'div',
-              { className: 'relative w-full', ref: searchBoxRef },
+              { className: 'items-center flex shrink-0' },
               e(
-                'form',
-                {
-                  className:
-                    'items-center flex w-full bg-[rgb(32,38,54)] gap-[7.2px] rounded-[0.675rem] px-4 py-2',
-                  onSubmit: (event: { preventDefault: () => void }) => {
-                    event.preventDefault()
-                    runSearch()
-                  },
-                },
+                Link,
+                { to: '/', className: 'block' },
                 e(
-                  'button',
-                  {
-                    type: 'submit',
-                    'aria-label': 'Tìm kiếm',
-                    className: 'items-center flex justify-center w-[18px] h-[18px] text-[rgb(115,121,141)] shrink-0',
-                  },
-                  e(Search, { className: 'w-[18px] h-[18px]' }),
+                  'div',
+                  { className: 'flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2' },
+                  e('span', { className: 'text-lg font-black tracking-[0.3em] text-[rgb(223,168,255)]' }, 'HYUNManga'),
                 ),
-                e('input', {
-                  type: 'text',
-                  value: searchValue,
-                  onChange: (event: { target: { value: string } }) => handleSearchInputChange(event.target.value),
-                  onFocus: () => {
-                    if (searchValue.trim().length >= 2) {
-                      setSuggestionsOpen(true)
-                    }
-                  },
-                  onKeyDown: (event: { key: string }) => {
-                    if (event.key === 'Escape') {
-                      setSuggestionsOpen(false)
-                    }
-                  },
-                  placeholder: 'Tìm truyện...',
-                  className:
-                    'block grow font-medium overflow-clip bg-transparent text-[rgb(115,121,141)] basis-0 outline-none border-none',
-                }),
               ),
-              suggestionPanel,
             ),
             e(
-              'button',
-              {
-                type: 'button',
-                'aria-label': 'Tìm kiếm nâng cao',
-                onClick: () => setAdvancedOpen((currentOpen: boolean) => !currentOpen),
-                className:
-                  'items-center flex w-full justify-center font-semibold bg-[rgba(32,38,54,0.8)] border-[rgb(192,132,252)] border text-[rgb(224,178,255)] text-[10.8px] gap-[3.6px] leading-[14.4px] px-3 py-2 shrink-0 rounded-full lg:w-auto',
-              },
-              e(SlidersHorizontal, { className: 'w-[14.4px] h-[14.4px] text-[rgb(192,132,252)]' }),
-              e('span', { className: 'block' }, 'Tìm kiếm nâng cao'),
+              'div',
+              { className: 'flex w-full flex-col gap-2 lg:absolute lg:left-1/2 lg:max-w-[520px] lg:-translate-x-1/2 lg:flex-row lg:items-center lg:gap-[10.8px]' },
+              e(
+                'div',
+                { className: 'relative w-full', ref: searchBoxRef },
+                e(
+                  'form',
+                  {
+                    className:
+                      'items-center flex w-full bg-[rgb(32,38,54)] gap-[7.2px] rounded-[0.675rem] px-4 py-2',
+                    onSubmit: (event: { preventDefault: () => void }) => {
+                      event.preventDefault()
+                      runSearch()
+                    },
+                  },
+                  e(
+                    'button',
+                    {
+                      type: 'submit',
+                      'aria-label': 'Tìm kiếm',
+                      className: 'items-center flex justify-center w-[18px] h-[18px] text-[rgb(115,121,141)] shrink-0',
+                    },
+                    e(Search, { className: 'w-[18px] h-[18px]' }),
+                  ),
+                  e('input', {
+                    type: 'text',
+                    value: searchValue,
+                    onChange: (event: { target: { value: string } }) => handleSearchInputChange(event.target.value),
+                    onFocus: () => {
+                      if (searchValue.trim().length >= 2) {
+                        setSuggestionsOpen(true)
+                      }
+                    },
+                    onKeyDown: (event: { key: string }) => {
+                      if (event.key === 'Escape') {
+                        setSuggestionsOpen(false)
+                      }
+                    },
+                    placeholder: 'Tìm truyện...',
+                    className:
+                      'block grow font-medium overflow-clip bg-transparent text-[rgb(115,121,141)] basis-0 outline-none border-none',
+                  }),
+                ),
+                suggestionPanel,
+              ),
+              e(
+                'button',
+                {
+                  type: 'button',
+                  'aria-label': 'Tìm kiếm nâng cao',
+                  onClick: () => setAdvancedOpen((currentOpen: boolean) => !currentOpen),
+                  className:
+                    'items-center flex w-full justify-center font-semibold bg-[rgba(32,38,54,0.8)] border-[rgb(192,132,252)] border text-[rgb(224,178,255)] text-[10.8px] gap-[3.6px] leading-[14.4px] px-3 py-2 shrink-0 rounded-full lg:w-auto',
+                },
+                e(SlidersHorizontal, { className: 'w-[14.4px] h-[14.4px] text-[rgb(192,132,252)]' }),
+                e('span', { className: 'block' }, 'Tìm kiếm nâng cao'),
+              ),
             ),
           ),
+          advancedPanel,
         ),
-        advancedPanel,
+      ),
+      e('div', { className: 'h-px w-full bg-white/6' }),
+    ),
+    e(
+      'button',
+      {
+        type: 'button',
+        onClick: handleSecretPortalOpen,
+        'aria-label': 'Mở liên kết bí mật',
+        title: 'Nhập mật khẩu để mở liên kết',
+        className:
+          'fixed bottom-5 right-5 z-[95] flex h-14 w-14 items-center justify-center rounded-full border-2 border-black/55 bg-[#d6ca67] shadow-[0_10px_24px_rgba(0,0,0,0.35)] transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(223,168,255)]',
+      },
+      e(
+        'span',
+        { className: 'relative block h-8 w-8 rounded-full bg-black' },
+        e('span', { className: 'absolute -top-1 left-[3px] h-3 w-3 rotate-[-34deg] rounded-tl-[10px] rounded-br-[4px] bg-black' }),
+        e('span', { className: 'absolute -top-1 right-[3px] h-3 w-3 rotate-[34deg] rounded-tr-[10px] rounded-bl-[4px] bg-black' }),
+        e('span', { className: 'absolute left-[9px] top-[11px] h-1.5 w-1.5 rounded-full bg-white' }),
+        e('span', { className: 'absolute right-[9px] top-[11px] h-1.5 w-1.5 rounded-full bg-white' }),
       ),
     ),
-    e('div', { className: 'h-px w-full bg-white/6' }),
   )
 }
