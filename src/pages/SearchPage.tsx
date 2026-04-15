@@ -131,6 +131,7 @@ export function SearchPage() {
       }}
     >
       <div
+        data-app-scroll-container="true"
         className="overflow-x-hidden overflow-y-auto bg-[rgb(11,12,29)]"
         style={{
           backgroundImage: 'url("https://storage.googleapis.com/download/storage/v1/b/prd-storytodesign.appspot.com/o/h2d-ext-asset%2F688666dc118ec47ec99834c7a9e190317cfef350.webp?generation=1776222735715056&alt=media"), radial-gradient(at 50% 0%, rgba(25, 23, 88, 0.3), rgba(11, 12, 29, 0) 45%, rgba(11, 12, 29, 0))',

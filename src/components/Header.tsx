@@ -43,9 +43,14 @@ export function Header() {
   const [suggestionsLoading, setSuggestionsLoading] = React.useState(false)
   const [suggestionsOpen, setSuggestionsOpen] = React.useState(false)
   const [suggestionsError, setSuggestionsError] = React.useState(null as string | null)
+  const [isHiddenOnScroll, setIsHiddenOnScroll] = React.useState(false)
   const suggestionRequestIdRef = React.useRef(0)
   const searchBoxRef = React.useRef(null as HTMLDivElement | null)
   const isSearchRoute = location.pathname === '/tim-kiem'
+
+  function handleLogoClick() {
+    window.location.assign('/')
+  }
 
   React.useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
@@ -139,6 +144,38 @@ export function Header() {
       window.clearTimeout(timeoutId)
     }
   }, [isSearchRoute, location.search, navigate, searchValue, selectedGenres])
+
+  React.useEffect(() => {
+    const scrollContainer = document.querySelector<HTMLElement>('[data-app-scroll-container="true"]')
+    const isContainerScrollable = Boolean(scrollContainer && scrollContainer.scrollHeight > scrollContainer.clientHeight + 1)
+    const scrollSource: Window | HTMLElement = isContainerScrollable ? scrollContainer as HTMLElement : window
+
+    const hideThreshold = 12
+    const directionThreshold = 6
+    let previousScrollTop = isContainerScrollable && scrollContainer ? scrollContainer.scrollTop : window.scrollY
+
+    function updateHeaderVisibility() {
+      const currentScrollTop = isContainerScrollable && scrollContainer ? scrollContainer.scrollTop : window.scrollY
+      const scrollDelta = currentScrollTop - previousScrollTop
+
+      if (currentScrollTop <= hideThreshold) {
+        setIsHiddenOnScroll(false)
+      } else if (scrollDelta > directionThreshold) {
+        setIsHiddenOnScroll(true)
+      } else if (scrollDelta < -directionThreshold) {
+        setIsHiddenOnScroll(false)
+      }
+
+      previousScrollTop = currentScrollTop
+    }
+
+    updateHeaderVisibility()
+    scrollSource.addEventListener('scroll', updateHeaderVisibility, { passive: true })
+
+    return () => {
+      scrollSource.removeEventListener('scroll', updateHeaderVisibility)
+    }
+  }, [])
 
   function runSearch(nextKeyword = searchValue, nextGenres = selectedGenres, options?: { replace?: boolean; closeAdvancedPanel?: boolean }) {
     const nextPath = buildSearchPath(nextKeyword, nextGenres)
@@ -368,7 +405,9 @@ export function Header() {
     null,
     e(
       'div',
-      { className: 'fixed h-[100.8px] left-0 top-0 right-0 z-50' },
+      {
+        className: `fixed left-0 right-0 top-0 z-50 h-[100.8px] transition-transform duration-300 ease-out motion-reduce:transition-none ${isHiddenOnScroll ? '-translate-y-full pointer-events-none' : 'translate-y-0'}`,
+      },
       e(
         'div',
         {
@@ -388,12 +427,16 @@ export function Header() {
               'div',
               { className: 'items-center flex shrink-0' },
               e(
-                Link,
-                { to: '/', className: 'block' },
+                'button',
+                {
+                  type: 'button',
+                  onClick: handleLogoClick,
+                  className: 'block',
+                },
                 e(
                   'div',
                   { className: 'flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2' },
-                  e('span', { className: 'text-lg font-black tracking-[0.3em] text-[rgb(223,168,255)]' }, 'HYUNManga'),
+                  e('span', { className: 'text-lg font-black tracking-[0.3em] text-[rgb(223,168,255)]' }, 'HyunManga'),
                 ),
               ),
             ),

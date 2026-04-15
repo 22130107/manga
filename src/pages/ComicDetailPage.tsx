@@ -73,6 +73,7 @@ export function ComicDetailPage() {
   return (
     <div className="min-h-screen bg-[rgb(11,12,29)] text-white">
       <div className="overflow-x-hidden bg-[rgb(11,12,29)]">
+        <div data-app-scroll-container="true" className="overflow-x-hidden overflow-y-auto bg-[rgb(11,12,29)]">
         <Header />
         <Navigation />
         <div className="h-px w-full bg-white/6" />
@@ -149,7 +150,7 @@ export function ComicDetailPage() {
             </div>
           ) : null}
         </main>
-
+        </div>
       </div>
     </div>
   )

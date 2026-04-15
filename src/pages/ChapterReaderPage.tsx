@@ -40,10 +40,11 @@ export function ChapterReaderPage() {
   const currentIndex = detail?.chapters.findIndex((item) => item.chapterId === chapterId) ?? -1
   const previousChapter = currentIndex > 0 ? detail?.chapters[currentIndex - 1] : undefined
   const nextChapter = currentIndex >= 0 ? detail?.chapters[currentIndex + 1] : undefined
+  const chapterDetailPath = detail ? `/truyen/${detail.slug}` : '#'
 
   return (
     <div className="min-h-screen bg-[rgb(11,12,29)] text-white">
-      <div className="overflow-x-hidden bg-[rgb(11,12,29)]">
+      <div data-app-scroll-container="true" className="overflow-x-hidden bg-[rgb(11,12,29)]">
         <Header />
         <Navigation />
         <div className="h-px w-full bg-white/6" />
@@ -65,28 +66,24 @@ export function ChapterReaderPage() {
                   <p className="mt-1 text-white/60">{chapter.chapterTitle ?? ''}</p>
 
                   <div className="mt-6 flex flex-wrap gap-3">
-                    {previousChapter ? (
-                      <Link
-                        to={`/truyen/${detail.slug}/chuong/${previousChapter.chapterId}`}
-                        className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85"
-                      >
-                        Chapter trước
-                      </Link>
-                    ) : null}
+                    <Link
+                      to={previousChapter ? `/truyen/${detail.slug}/chuong/${previousChapter.chapterId}` : chapterDetailPath}
+                      className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85 transition-colors hover:bg-white/10"
+                    >
+                      Chapter trước
+                    </Link>
                     <Link
                       to={`/truyen/${detail.slug}`}
                       className="rounded-full bg-[rgb(211,115,255)] px-4 py-2 text-sm font-semibold text-black"
                     >
                       Về trang truyện
                     </Link>
-                    {nextChapter ? (
-                      <Link
-                        to={`/truyen/${detail.slug}/chuong/${nextChapter.chapterId}`}
-                        className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85"
-                      >
-                        Chapter sau
-                      </Link>
-                    ) : null}
+                    <Link
+                      to={nextChapter ? `/truyen/${detail.slug}/chuong/${nextChapter.chapterId}` : chapterDetailPath}
+                      className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85 transition-colors hover:bg-white/10"
+                    >
+                      Chapter sau
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -101,6 +98,32 @@ export function ChapterReaderPage() {
                     loading="lazy"
                   />
                 ))}
+              </div>
+
+              <div className="mx-auto max-w-4xl px-6 pb-2">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                  <p className="text-sm text-white/60">Đã tới cuối chương.</p>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <Link
+                      to={previousChapter ? `/truyen/${detail.slug}/chuong/${previousChapter.chapterId}` : chapterDetailPath}
+                      className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85 transition-colors hover:bg-white/10"
+                    >
+                      Chapter trước
+                    </Link>
+                    <Link
+                      to={`/truyen/${detail.slug}`}
+                      className="rounded-full bg-[rgb(211,115,255)] px-4 py-2 text-sm font-semibold text-black"
+                    >
+                      Về trang truyện
+                    </Link>
+                    <Link
+                      to={nextChapter ? `/truyen/${detail.slug}/chuong/${nextChapter.chapterId}` : chapterDetailPath}
+                      className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/85 transition-colors hover:bg-white/10"
+                    >
+                      Chapter sau
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           ) : null}
