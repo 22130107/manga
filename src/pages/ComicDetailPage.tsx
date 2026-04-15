@@ -6,11 +6,52 @@ import { Loading } from '../components/Loading'
 import { Navigation } from '../components/Navigation'
 import { fetchComicDetail } from '../services/otruyen'
 
+type ComicChapter = Awaited<ReturnType<typeof fetchComicDetail>>['chapters'][number]
+
+function getChapterStartNumber(chapter: ComicChapter) {
+  const source = `${chapter.chapterName} ${chapter.filename}`
+  const match = source.match(/\d+(?:[.,]\d+)?/)
+
+  if (!match) {
+    return Number.POSITIVE_INFINITY
+  }
+
+  return Number.parseFloat(match[0].replace(',', '.'))
+}
+
+function pickReadChapter(chapters: ComicChapter[]) {
+  if (chapters.length === 0) {
+    return null
+  }
+
+  const chapterOne = chapters.find((chapter) => getChapterStartNumber(chapter) === 1)
+
+  if (chapterOne) {
+    return chapterOne
+  }
+
+  return chapters.reduce((bestChapter, currentChapter) => {
+    const bestValue = getChapterStartNumber(bestChapter)
+    const currentValue = getChapterStartNumber(currentChapter)
+
+    if (currentValue < bestValue) {
+      return currentChapter
+    }
+
+    if (currentValue === bestValue && currentChapter.chapterName.localeCompare(bestChapter.chapterName, undefined, { numeric: true }) < 0) {
+      return currentChapter
+    }
+
+    return bestChapter
+  })
+}
+
 export function ComicDetailPage() {
   const { slug = '' } = useParams()
   const [detail, setDetail] = React.useState<Awaited<ReturnType<typeof fetchComicDetail>> | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
+  const readChapter = React.useMemo(() => (detail ? pickReadChapter(detail.chapters) : null), [detail])
 
   React.useEffect(() => {
     async function loadDetail() {
@@ -63,6 +104,25 @@ export function ComicDetailPage() {
                   </p>
                   <h1 className="mt-2 text-4xl font-semibold">{detail.name}</h1>
                   <p className="mt-2 text-white/60">{detail.originNames.filter(Boolean).join(' - ')}</p>
+
+                  <div className="mt-5 flex flex-wrap items-center gap-3">
+                    {readChapter ? (
+                      <Link
+                        to={`/truyen/${detail.slug}/chuong/${readChapter.chapterId}`}
+                        className="rounded-full bg-[rgb(211,115,255)] px-5 py-2.5 text-sm font-semibold text-black transition-opacity hover:opacity-90"
+                      >
+                        Đọc truyện
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled
+                        className="rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white/50"
+                      >
+                        Chưa có chương
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-6 leading-8 text-white/75" dangerouslySetInnerHTML={{ __html: detail.content ?? '<p>Không có mô tả.</p>' }} />
